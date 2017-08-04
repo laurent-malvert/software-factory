@@ -1,0 +1,115 @@
+###########################################################################
+# NSW Hybris Code Factory
+###########################################################################
+#  These services are the building blocks for a code factory environment,
+#  composed of:
+#   - jenkins for Continuous Integration and Continuous Delivery (CI/CD),
+#   - sonarqube for Continuous Inspection,
+#   - nexus for artifact/archive management
+###########################################################################
+
+version: "3"
+
+services:
+
+  # Use an nginx reverse-proxy to expose all our public web services on
+  # the same 80/443 ports by using virtual hosts.
+  #
+  # Virtual hosts are defined by an environment variable in each service's
+  # <service>.env file as:
+  #   VIRTUAL_HOST=<service>.<hostname>
+  proxy:
+    image: jwilder/nginx-proxy
+    depends_on:
+      - jenkins
+      - nexus
+      - sonarqube
+    ports:
+      - "80:80"
+    networks:
+      - softwarefactorynet
+      - proxynet
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    expose:
+      - 8080  # default web server listening port
+      - 50000 # default JNLP slave listening port
+    networks:
+      - jenkinsnet
+      - softwarefactorynet
+      - proxynet
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - /opt/software-factory/jenkins/data:/var/jenkins_home
+    env_file:
+      - continuous-delivery/jenkins/jenkins.env
+
+  nexus:
+    image: sonatype/docker-nexus3
+    expose:
+      - 8081
+    networks:
+      - softwarefactorynet
+      - proxynet
+    volumes:
+      - nexus-data:/nexus-data
+      - nexus-data:/opt/software-factory/nexus/data
+    env_file:
+      - repository-management/nexus/nexus.env
+
+  sonarqube:
+# when a 6.x LTS is released, switch to it
+# the 5.6 LTS is not exactly ideal because of missing bug-fixes
+# for java project analyzer configurations
+#    image: sonarqube:lts
+    image: sonarqube:6.4
+    depends_on:
+      - sonarqube_database
+    expose:
+      - 9000
+    networks:
+      - sonarnet
+      - softwarefactorynet
+      - proxynet
+    volumes:
+      - sonarqube-conf:/opt/sonarqube/conf
+      - /opt/software-factory/sonarqube/conf:/opt/sonarqube/conf
+      - sonarqube-data:/opt/sonarqube/data
+      - /opt/software-factory/sonarqube/data:/opt/sonarqube/conf
+      - sonarqube-extensions:/opt/sonarqube/extensions
+      - /opt/software-factory/sonarqube/extensions:/opt/sonarqube/extensions
+      - sonarqube-bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+    env_file:
+      - continuous-inspection/sonarqube/sonarqube.env
+
+  sonarqube_database:
+    image: mysql:5.7
+    networks:
+      - sonarnet
+    expose:
+      - 3306
+    env_file:
+      - continuous-inspection/sonarqube/sonarqube_database.env
+
+networks:
+  softwarefactorynet:
+    driver: bridge
+  jenkinsnet:
+    driver: bridge
+  sonarnet:
+    driver: bridge
+  proxynet:
+    driver: bridge
+#    external:
+#      name: nginxproxy_default
+
+volumes:
+  jenkins-data:
+  nexus-data:
+  sonarqube-conf:
+  sonarqube-data:
+  sonarqube-extensions:
+  sonarqube-bundled-plugins:
