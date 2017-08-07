@@ -75,7 +75,8 @@ and recreate.
 
 ## Systems
 
-|| System   | Service Name | Service URL                          ||
+| System    | Service Name | Service URL                           |
+|-----------|--------------|---------------------------------------|
 | Jenkins   | jenkins      | http://jenkins.software-factory.lan   |
 | Nexus     | nexus        | http://nexus.software-factory.lan     |
 | SonarQube | sonarqube    | http://sonarqube.software-factory.lan |
