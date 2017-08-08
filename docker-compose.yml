@@ -46,7 +46,7 @@ services:
       - jenkins-data:/var/jenkins_home
       - /opt/software-factory/jenkins/data:/var/jenkins_home
     env_file:
-      - continuous-delivery/jenkins/jenkins.env
+      - jenkins/jenkins-server/jenkins.env
 
   nexus:
     image: sonatype/nexus3
@@ -59,7 +59,7 @@ services:
       - nexus-data:/nexus-data
       - nexus-data:/opt/software-factory/nexus/data
     env_file:
-      - repository-management/nexus/nexus.env
+      - nexus/nexus.env
 
   sonarqube:
 # when a 6.x LTS is released, switch to it
@@ -84,7 +84,7 @@ services:
       - /opt/software-factory/sonarqube/extensions:/opt/sonarqube/extensions
       - sonarqube-bundled-plugins:/opt/sonarqube/lib/bundled-plugins
     env_file:
-      - continuous-inspection/sonarqube/sonarqube.env
+      - sonarqube/sonarqube.env
 
   sonarqube_database:
     image: mysql:5.7
@@ -93,7 +93,7 @@ services:
     expose:
       - 3306
     env_file:
-      - continuous-inspection/sonarqube/sonarqube_database.env
+      - sonarqube/sonarqube_database.env
 
 networks:
   softwarefactorynet:
