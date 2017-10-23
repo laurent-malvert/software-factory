@@ -66,7 +66,7 @@ services:
 # the 5.6 LTS is not exactly ideal because of missing bug-fixes
 # for java project analyzer configurations
 #    image: sonarqube:lts
-    image: sonarqube:6.4
+    image: sonarqube:6.6
     depends_on:
       - sonarqube_database
     expose:
