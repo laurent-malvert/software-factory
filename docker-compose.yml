@@ -32,6 +32,8 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./proxy/proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+    environment:
+      - DEFAULT_HOST=software-factory.lan
 
   jenkins:
     image: jenkins/jenkins:lts
