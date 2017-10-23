@@ -1,11 +1,11 @@
 ###########################################################################
-# NSW Hybris Code Factory
+# Software Factory
 ###########################################################################
-#  These services are the building blocks for a code factory environment,
-#  composed of:
+#  These services are the building blocks for a software factory
+# environment, composed of:
 #   - jenkins for Continuous Integration and Continuous Delivery (CI/CD),
 #   - sonarqube for Continuous Inspection,
-#   - nexus for artifact/archive management
+#   - nexus for Artifact/archive Repository Management.
 ###########################################################################
 
 version: "3"
