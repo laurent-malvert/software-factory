@@ -45,6 +45,10 @@ services:
       - softwarefactorynet
       - proxynet
     volumes:
+      # so that jenkins-in-docker can start containers
+      # on its host's docker engine rather than doing
+      # Docker-in-Docker
+      - /var/run/docker.sock:/var/run/docker.sock
       - jenkins-data:/var/jenkins_home
       - /opt/software-factory/jenkins/data:/var/jenkins_home
     env_file:
