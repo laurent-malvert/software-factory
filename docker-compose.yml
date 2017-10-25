@@ -47,6 +47,9 @@ services:
     networks:
       - softwarefactorynet
       - jenkinsnet
+      - nexusnet
+    extra_hosts:
+      - "nexus.software-factory.lan:172.20.0.1"
     volumes:
       # so that jenkins-in-docker can start containers
       # on its host's docker engine rather than doing
@@ -59,7 +62,7 @@ services:
 
   nexus:
     image: sonatype/nexus3
-    ports:
+    expose:
       - "8081"
     networks:
       - softwarefactorynet
@@ -71,14 +74,14 @@ services:
       - nexus/nexus.env
 
   sonarqube:
-# when a 6.x LTS is released, switch to it
-# the 5.6 LTS is not exactly ideal because of missing bug-fixes
-# for java project analyzer configurations
-#    image: sonarqube:lts
+    # TODO: when a 6.x LTS is released, switch to it.
+    # The 5.6 LTS is not exactly ideal because of missing bug-fixes
+    # for java project analyzer configurations.
+    # image: sonarqube:lts
     image: sonarqube:6.6
     depends_on:
       - sonarqube_database
-    ports:
+    expose:
       - "9000"
     networks:
       - softwarefactorynet
@@ -96,7 +99,7 @@ services:
 
   sonarqube_database:
     image: mysql:5.7
-    ports:
+    expose:
       - "3306"
     networks:
       - sonarnet
