@@ -4,6 +4,7 @@ A dockerized minimalist (yet powerful and feature-rich) software
 factory setup to get your team up and running and industrialize your
 software development processes.
 
+
 ## Concepts
 
 This software factory should be:
@@ -17,6 +18,7 @@ This software factory should be:
 We aim to achieve this by using a docker base and persistent volumes,
 for convenience.
 
+
 ## Systems
 
 This system can be customized at will and may package additional
@@ -24,10 +26,11 @@ components, but at its core it offers:
 
  * Jenkins (latest LTS),
  * Nexus (latest OSS),
- * SonarQube (latest LTS) (UPDATE: actually a 6.4 for convenience for now).
+ * SonarQube (latest LTS) (UPDATE: actually a 6.6 for convenience for now).
 
 The services are made available by a customized NGINX reverse-proxy,
 using https://github.com/jwilder/nginx-proxy/.
+
 
 ## Installation
 
@@ -37,8 +40,8 @@ using https://github.com/jwilder/nginx-proxy/.
 
 Last tested with:
 
- * docker 17.06
- * docker-compose 1.15.0
+ * docker 17.09.0-ce
+ * docker-compose 1.16.1
 
 #### DNS
 
@@ -62,8 +65,6 @@ Start the software factory as daemonized containers simply with:
 docker-compose up -d
 ```
 
-
-
 ### Teardown
 
 ```
@@ -73,6 +74,7 @@ docker-compose down -v --rmi all --remove-orphans
 Yes, this is purposefully destructive, to ensure the system is easy to destroy
 and recreate.
 
+
 ## Systems
 
 | System    | Service Name | Service URL                           |
@@ -80,6 +82,7 @@ and recreate.
 | Jenkins   | jenkins      | http://jenkins.software-factory.lan   |
 | Nexus     | nexus        | http://nexus.software-factory.lan     |
 | SonarQube | sonarqube    | http://sonarqube.software-factory.lan |
+
 
 ## Implementation Details
 
