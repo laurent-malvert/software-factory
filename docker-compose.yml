@@ -50,6 +50,7 @@ services:
       - nexusnet
     extra_hosts:
       - "nexus.software-factory.lan:172.20.0.1"
+      - "sonarqube.software-factory.lan:172.20.0.1"
     volumes:
       # so that jenkins-in-docker can start containers
       # on its host's docker engine rather than doing
