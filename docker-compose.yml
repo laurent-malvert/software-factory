@@ -50,6 +50,7 @@ services:
       - softwarefactorynet
       - jenkinsnet
       - nexusnet
+      - mailhognet
     extra_hosts:
       - "nexus.software-factory.lan:172.20.0.1"
       - "sonarqube.software-factory.lan:172.20.0.1"
