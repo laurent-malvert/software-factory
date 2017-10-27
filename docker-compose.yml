@@ -56,6 +56,12 @@ services:
       # on its host's docker engine rather than doing
       # Docker-in-Docker
       - /var/run/docker.sock:/var/run/docker.sock
+      # WARNING: Because of slow host mounts performance (especially
+      # in docker for mac), you may want to configure your Jenkins instance
+      # to not store some folders inside jenkins_home
+      # (e.g. fingersprints, jobs, workspace...)
+      # We use host mounts by default to easily restore a Jenkins
+      # configuration (for now) and avoid data loss.
       - jenkins-data:/var/jenkins_home
       - /opt/software-factory/jenkins/data:/var/jenkins_home
     env_file:
@@ -70,7 +76,7 @@ services:
       - nexusnet
     volumes:
       - nexus-data:/nexus-data
-      - nexus-data:/opt/software-factory/nexus/data
+      - /opt/software-factory/nexus/data:/nexus-data
     env_file:
       - nexus/nexus.env
 
@@ -89,12 +95,12 @@ services:
       - sonarnet
     volumes:
       - sonarqube-conf:/opt/sonarqube/conf
-      - /opt/software-factory/sonarqube/conf:/opt/sonarqube/conf
       - sonarqube-data:/opt/sonarqube/data
-      - /opt/software-factory/sonarqube/data:/opt/sonarqube/conf
       - sonarqube-extensions:/opt/sonarqube/extensions
-      - /opt/software-factory/sonarqube/extensions:/opt/sonarqube/extensions
       - sonarqube-bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+      - /opt/software-factory/sonarqube/conf:/opt/sonarqube/conf
+      - /opt/software-factory/sonarqube/data:/opt/sonarqube/conf
+      - /opt/software-factory/sonarqube/extensions:/opt/sonarqube/extensions
     env_file:
       - sonarqube/sonarqube.env
 
