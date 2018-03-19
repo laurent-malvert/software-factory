@@ -27,6 +27,8 @@ services:
       - nexus
       - sonarqube
       - mailhog
+    env_file:
+      - proxy/proxy.env
     ports:
       - "80:80"
     networks:
@@ -38,11 +40,11 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./proxy/proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
-    environment:
-      - proxy/proxy.env
 
   jenkins:
     image: jenkins/jenkins:lts
+    env_file:
+      - jenkins/jenkins-server/jenkins.env
     expose:
       - "8080"  # default web server listening port
       - "50000" # default JNLP slave listening port
@@ -68,11 +70,11 @@ services:
       # configuration (for now) and avoid data loss.
       - jenkins-data:/var/jenkins_home
       - /opt/software-factory/jenkins/data:/var/jenkins_home
-    env_file:
-      - jenkins/jenkins-server/jenkins.env
 
   nexus:
-    image: sonatype/nexus3
+    image: sonatype/nexus3:3.9.0
+    env_file:
+      - nexus/nexus.env
     expose:
       - "8081"
     networks:
@@ -81,18 +83,13 @@ services:
     volumes:
       - nexus-data:/nexus-data
       - /opt/software-factory/nexus/data:/nexus-data
-    env_file:
-      - nexus/nexus.env
 
   sonarqube:
-
-    # TODO: when a 6.x LTS is released, switch to it.
-    # The 5.6 LTS is not exactly ideal because of missing bug-fixes
-    # for java project analyzer configurations.
-    # image: sonarqube:lts
-    image: sonarqube:6.6
+    image: sonarqube:lts
     depends_on:
       - sonarqube_database
+    env_file:
+      - sonarqube/sonarqube.env
     expose:
       - "9000"
     networks:
@@ -106,17 +103,18 @@ services:
       - /opt/software-factory/sonarqube/conf:/opt/sonarqube/conf
       - /opt/software-factory/sonarqube/data:/opt/sonarqube/conf
       - /opt/software-factory/sonarqube/extensions:/opt/sonarqube/extensions
-    env_file:
-      - sonarqube/sonarqube.env
 
   sonarqube_database:
     image: mysql:5.7
+    env_file:
+      - sonarqube/sonarqube_database.env
     expose:
       - "3306"
     networks:
       - sonarnet
-    env_file:
-      - sonarqube/sonarqube_database.env
+    volumes:
+#      - sonarqube-database:/var/lib/mysql:rw
+      - /opt/sonarqube/database:/var/lib/mysql:rw
 
   # This service is *only* meant to be used to test emailing functionalities,
   # and NOT to deploy a real email server, as we simply use mailhog to send
