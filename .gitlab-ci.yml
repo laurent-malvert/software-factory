@@ -14,7 +14,7 @@ docker push registry.gitlab.com/laurent.malvert/software-factory
 build-master:
   stage: build
   script:
-    - docker-compose build --pull --force-rm --no-cache
+    - docker-compose build --pull --force-rm --no-cache "software-factory"
     - docker-compose push
   only:
     - master
@@ -22,7 +22,7 @@ build-master:
 build:
   stage: build
   script:
-    - docker-compose build --pull --force-rm --no-cache ":$CI_COMMIT_REF_SLUG" .
-    - docker-compose push ":$CI_COMMIT_REF_SLUG"
+    - docker-compose build --pull --force-rm --no-cache "software-factory:$CI_COMMIT_REF_SLUG" .
+    - docker-compose push "software-factory:$CI_COMMIT_REF_SLUG"
   except:
     - master
